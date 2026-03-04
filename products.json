@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "name": "Hydrangea Blue",
+        "price": "$45.00",
+        "image": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400",
+        "desc": "Hand-woven periwinkle seed beads inspired by Cape Cod summers."
+    },
+    {
+        "id": 2,
+        "name": "Seaglass Fringe",
+        "price": "$38.00",
+        "image": "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400",
+        "desc": "Translucent matte beads in seafoam green and sandy beige."
+    }
+]

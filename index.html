@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seed Bead Spring Collection</title>
+    <style>
+        /* 1. Basic Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9fbfb;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 { text-align: center; color: #5a7d7a; }
+
+        /* 2. Grid Layout for Earrings */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            text-align: center;
+            padding-bottom: 15px;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+
+        .card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .view-btn {
+            background-color: #8da9a6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* 3. The Modal (Hidden by default) */
+        .modal {
+            display: none; /* Hidden */
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 15px;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        #modal-img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Quill and Hook Collection</h1>
+	
+	<div id="product-grid" class="gallery"></div>
+    <!--<div class="gallery">
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=400" alt="Hydrangea Blue">
+            <h3>Hydrangea Blue</h3>
+            <p>$45.00</p>
+            <button class="view-btn" onclick="openDetails('Hydrangea Blue', 'Hand-woven periwinkle seed beads inspired by Cape Cod summers. Features 14k gold-filled hooks.', 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=400')">View Details</button>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&q=80&w=400" alt="Seaglass Fringe">
+            <h3>Seaglass Fringe</h3>
+            <p>$38.00</p>
+            <button class="view-btn" onclick="openDetails('Seaglass Fringe', 'Translucent matte beads in seafoam green and sandy beige. Lightweight and elegant.', 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&q=80&w=400')">View Details</button>
+        </div>
+    </div>-->
+
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <img id="modal-img" src="" alt="Detail Image">
+            <h2 id="modal-title"></h2>
+            <p id="modal-desc"></p>
+            <button class="view-btn" style="width:100%">Add to Cart</button>
+        </div>
+    </div>
+
+    <script>
+    // 1. Your Product Data (Easy to add/remove items here!)
+    const products = [
+        {
+            id: 1,
+            name: "Pearl Earrings",
+            price: "$18.00",
+            image: 
+			"C:/Users/abhin/OneDrive/Desktop/Abhinav/53 Linwood Ave/Etsy/Quill/Earrings/SHOP/Eyes white_Shop_mannequin.png"
+			,
+            desc: "Hand-woven periwinkle seed beads inspired by Cape Cod summers."
+        },
+        {
+            id: 2,
+            name: "Seaglass Fringe",
+            price: "$38.00",
+            image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400",
+            desc: "Translucent matte beads in seafoam green and sandy beige."
+        },
+        {
+            id: 3,
+            name: "Nautical Anchor",
+            price: "$42.00",
+            image: "https://images.unsplash.com/photo-1590548784585-643d2b9f2925?w=400",
+            desc: "Navy and white stripes with a gold-plated anchor charm."
+        },
+        {
+            id: 4,
+            name: "Sunset Dunes",
+            price: "$40.00",
+            image: "https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=400",
+            desc: "Warm peach and terracotta tones mimicking a Cape Cod sunset."
+        }
+    ];
+
+    // 2. Function to Render all products
+    function displayProducts() {
+        const grid = document.getElementById('product-grid');
+        
+        // Loop through each product in the array
+        products.forEach(product => {
+            // Create the HTML for one card
+            const cardHTML = `
+                <div class="card">
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>${product.price}</p>
+                    <button class="view-btn" onclick="openDetails('${product.name}', '${product.desc}', '${product.image}')">
+                        View Details
+                    </button>
+                </div>
+            `;
+            // Add it to the grid
+            grid.innerHTML += cardHTML;
+        });
+    }
+
+
+	async function loadProducts() {
+    try {
+        // 1. Fetch the external JSON file
+        const response = await fetch('products.json');
+        
+        // 2. Turn the raw file into a JavaScript list
+        const products = await response.json();
+        
+        const grid = document.getElementById('product-grid');
+        
+        // 3. Clear the grid and loop through the data
+        grid.innerHTML = ""; 
+        products.forEach(product => {
+            const cardHTML = `
+                <div class="card">
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>${product.price}</p>
+                    <button class="view-btn" onclick="openDetails('${product.name}', '${product.desc}', '${product.image}')">
+                        View Details
+                    </button>
+                </div>
+            `;
+            grid.innerHTML += cardHTML;
+        });
+		} 
+	catch (error) 
+		{
+			console.error("Could not load products:", error);
+		}
+	}
+
+
+    // 3. Modal Functions (Same as before)
+    function openDetails(title, description, imgSrc) {
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-desc').innerText = description;
+        document.getElementById('modal-img').src = imgSrc;
+        document.getElementById('detailsModal').style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById('detailsModal').style.display = "none";
+    }
+
+    // Run the function when the page loads
+    window.onload = displayProducts;
+</script>
+</body>
+</html>
