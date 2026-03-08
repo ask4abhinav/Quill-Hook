@@ -43,6 +43,30 @@
             object-fit: cover;
         }
 
+		/* Styling for the Sold State */
+		.card.sold {
+		    opacity: 0.7;
+		    filter: grayscale(80%);
+		    pointer-events: none; /* Prevents clicking the card */
+		    position: relative;
+		}
+		
+		/* The "Sold Out" Overlay */
+		.card.sold::before {
+		    content: "SOLD";
+		    position: absolute;
+		    top: 50%;
+		    left: 50%;
+		    transform: translate(-50%, -50%) rotate(-15deg);
+		    background: rgba(255, 0, 0, 0.8);
+		    color: white;
+		    padding: 10px 20px;
+		    font-weight: bold;
+		    font-size: 1.2rem;
+		    border-radius: 5px;
+		    z-index: 2;
+		}
+
         .view-btn {
             background-color: #8da9a6;
             color: white;
@@ -136,6 +160,7 @@
             "id": 1,
             "name": "Pearl Earrings",
             "price": "$18.00",
+			"status": "available",
             "images": [
 			"images/Eyes white_Shop_mannequin.png",
 			"images/Eyeswhite_Shop.jpg"
@@ -146,6 +171,7 @@
             "id": 2,
             "name": "Heart Earrings",
             "price": "$16.00",
+			"status": "sold",
             "images": [
 				"images/Heart_Both_Shop.jpg",
 				"images/Heart_Shop.jpg"
@@ -156,6 +182,7 @@
             "id": 3,
             "name": "Nautical Anchor",
             "price": "$42.00",
+			"status": "available",
             "images": ["https://images.unsplash.com/photo-1590548784585-643d2b9f2925?w=400"],
             "desc": "Navy and white stripes with a gold-plated anchor charm."
         },
@@ -163,6 +190,7 @@
             "id": 4,
             "name": "Sunset Dunes",
             "price": "$40.00",
+			"status": "available",
             "images": ["https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=400"],
             "desc": "Warm peach and terracotta tones mimicking a Cape Cod sunset."
         }
@@ -175,13 +203,19 @@
         // Loop through each product in the array
         products.forEach(product => {
             // Create the HTML for one card
-            const cardHTML = `
+            // Check if the item is sold
+		    const isSold = product.status === 'sold';
+		    const soldClass = isSold ? 'sold' : '';
+		    const buttonText = isSold ? 'Sold Out' : 'View Details';
+		    const buttonDisabled = isSold ? 'disabled' : '';
+			
+			const cardHTML = `
                 <div class="card">
                     <img src="${product.images[0]}" alt="${product.name}">
                     <h3>${product.name}</h3>
                     <p>${product.price}</p>
                     <button class="view-btn" onclick="openDetails('${product.name}', '${product.desc}', '${product.images.join(',')}')">
-                        View Details
+                        ${buttonText} View Details
                     </button>
                 </div>
             `;
@@ -204,13 +238,20 @@
         // 3. Clear the grid and loop through the data
         grid.innerHTML = ""; 
         products.forEach(product => {
+
+			// Check if the item is sold
+		    const isSold = product.status === 'sold';
+		    const soldClass = isSold ? 'sold' : '';
+		    const buttonText = isSold ? 'Sold Out' : 'View Details';
+		    const buttonDisabled = isSold ? 'disabled' : '';
+			
             const cardHTML = `
                 <div class="card">
                     <img src="${product.image}" alt="${product.name}">
                     <h3>${product.name}</h3>
                     <p>${product.price}</p>
                     <button class="view-btn" onclick="openDetails('${product.name}', '${product.desc}', '${product.images.join(',')}')">
-                        View Details
+                      ${buttonText}  View Details
                     </button>
                 </div>
             `;
@@ -273,6 +314,7 @@
 </script>
 </body>
 </html>
+
 
 
 
